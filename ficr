@@ -1,0 +1,43 @@
+#!/bin/bash
+gold=$(tput setaf 3)
+rese=$(tput sgr 0)
+count=0
+if [ "$#" -eq "2" ]; then
+	if [[ "$2" =~ ^[0-9]+$ ]]; then
+		until [ "$count" -eq "$2" ]
+		do
+			if [ "$count" -eq "0" ]; then
+				if [ -f "$1" ]; then
+					echo "File already exists, please choose another name"
+					break
+				else
+					touch $1
+					echo "#!/bin/bash" > $1
+					echo "#This is an automatically generated script base" >> $1
+					chmod u+x $1
+					if [ -f "$1" ]; then
+						echo "Succesfully created $gold$1$rese"
+					else
+						echo "Failed to create $gold$1$rese"
+					fi
+				fi
+			else
+				touch $1$count
+				echo "#!/bin/bash" > $1$count
+				echo "#This is an automatically generated script base" >> $1$count
+				chmod u+x $1$count
+				if [ -f "$1$count" ]; then
+                                        echo "Succesfully created $gold$1$count$rese"
+                                else
+                                        echo "Failed to create $gold$1$count$rese"
+                                fi
+
+			fi
+			count=$[ $count + 1 ]
+		done
+	else
+		echo "Amount must be an integer value!"
+	fi
+else
+	echo "Usage: the first parameter is a filename, the second parameter is amount of files to be created"
+fi
